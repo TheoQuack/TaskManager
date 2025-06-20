@@ -1,77 +1,35 @@
 const express = require('express');
 const router = express.Router();
-
-let tasks = [];
-let end = 0;
+const Task = require('../models/task.js');
 
 
-const endChecker = () =>{
-    if (tasks.length == 0) {
-    end = 0;
-    }
-    else{
-    console.log("THis ran");
-    end = tasks[tasks.length-1].id;
-    }
-}
-
-
-router.get('/api/tasks', (req,res)=>{
+router.get('/api/tasks', async (req,res)=>{
+    const tasks = await Task.findAll();
     res.json(tasks);
 })
 
-
-router.post('/api/tasks', (req,res)=>{
-
-    endChecker();
-    const task = {id: end + 1, ...req.body};
-    tasks.push(task);
+router.post('/api/tasks', async (req,res)=>{
+    const task = await Task.create(req.body);
     res.status(201).json(task);
     
-})
+});
 
-
-
-router.put('/api/tasks/:id', (req,res)=>{
-
+router.put('/api/tasks/:id', async (req,res)=>{
     const id = req.params.id;
-    const newTask = req.body
+    const task = await Task.findByPk(id);
+    if (!task) return res.status(404).json({error: "Not Found"});
+    await task.update(req.body);
+    res.json(task);
 
-    const CTasks = tasks.map((t, i)=> {
-
-        if (t.id == id) {
-            ti = {id : t.id, ...newTask};
-            tasks.splice(i, 1, ti);
-            res.status(200).send("");
-        }
-      
-    })
-
-    if (id > end+1){
-        res.status(404).send("Resource not Found");
-    }
 })
 
-
-
-router.delete('/api/tasks/:id', (req,res)=>{
-    
+router.delete('/api/tasks/:id', async (req,res)=>{
     const id = req.params.id;
-
-    const CTasks = tasks.map((t, i)=> {
-        if (t.id == id) {
-            tasks.splice(i, 1);
-            res.status(200).send("");
-        }
-    })
-
-
-    if (id > end+1){
-        res.status(404).send("Resource not Found");
-    }
+    const task = await Task.findByPk(id);
+    if (!task) return res.status(404).json({error: "Not Found"});
+    await task.destroy();
+    res.json({ message: "deleted" });
 })
-
-
 
 
 
