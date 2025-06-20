@@ -5,6 +5,16 @@ let tasks = [];
 let end = 0;
 
 
+const endChecker = () =>{
+    if (tasks.length > 0) {
+    end = tasks[tasks.length - 1].id;
+    }
+    else{
+    end = 0;
+    }
+}
+
+
 router.get('/api/tasks', (req,res)=>{
     res.json(tasks);
 })
@@ -12,14 +22,7 @@ router.get('/api/tasks', (req,res)=>{
 
 router.post('/api/tasks', (req,res)=>{
 
-    if (tasks.length > 0) {
-    end = tasks[tasks.length - 1].id;
-    }
-
-    else{
-    end = 0;
-    }
-    
+    endChecker();
     const task = {id: end + 1, ...req.body};
     tasks.push(task);
     res.status(201).json(task);
@@ -43,7 +46,7 @@ router.put('/api/tasks/:id', (req,res)=>{
       
     })
 
-    if (id >= biggest){
+    if (id >= end){
         res.status(404).send("Resource not Found");
     }
 })
@@ -62,12 +65,10 @@ router.delete('/api/tasks/:id', (req,res)=>{
     })
 
 
-    if (id >= biggest){
+    if (id >= end){
         res.status(404).send("Resource not Found");
     }
 })
-
-
 
 
 
