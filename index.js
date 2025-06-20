@@ -19,6 +19,7 @@ sequelize.sync()
 
 app.get('/api/tasks',  taskRoutes);
 app.post('/api/tasks', taskRoutes);
+app.get('/api/tasks/:id',  taskRoutes);
 app.put('/api/tasks/:id', taskRoutes);
 app.delete('/api/tasks/:id', taskRoutes);
 

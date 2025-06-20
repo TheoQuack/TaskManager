@@ -14,6 +14,12 @@ router.post('/api/tasks', async (req,res)=>{
     
 });
 
+router.get('/api/tasks/:id', async (req,res)=>{
+    const id = req.params.id;
+    const task = await Task.findByPk(id);
+    task ? res.json(task) : res.status(404).json({error:"Not Found"});
+})
+
 router.put('/api/tasks/:id', async (req,res)=>{
     const id = req.params.id;
     const task = await Task.findByPk(id);
