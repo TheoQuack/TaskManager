@@ -6,11 +6,12 @@ let end = 0;
 
 
 const endChecker = () =>{
-    if (tasks.length > 0) {
-    end = tasks[tasks.length - 1].id;
+    if (tasks.length == 0) {
+    end = 0;
     }
     else{
-    end = 0;
+    console.log("THis ran");
+    end = tasks[tasks.length-1].id;
     }
 }
 
@@ -46,7 +47,7 @@ router.put('/api/tasks/:id', (req,res)=>{
       
     })
 
-    if (id >= end){
+    if (id > end+1){
         res.status(404).send("Resource not Found");
     }
 })
@@ -65,7 +66,7 @@ router.delete('/api/tasks/:id', (req,res)=>{
     })
 
 
-    if (id >= end){
+    if (id > end+1){
         res.status(404).send("Resource not Found");
     }
 })
